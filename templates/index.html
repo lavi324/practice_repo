@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Teams</title>
+</head>
+<body>
+    <h1>Football Teams Standings</h1>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Place</th>
+            <th>Points</th>
+            <th>Wins</th>
+            <th>Draws</th>
+            <th>Losses</th>
+            <th>Goals Scored</th>
+            <th>Goals Conceded</th>
+        </tr>
+        {% for team in teams_data %}
+            <tr>
+                <td>{{ team.name }}</td>
+                <td>{{ team.place }}</td>
+                <td>{{ team.points }}</td>
+                <td>{{ team.wins }}</td>
+                <td>{{ team.draws }}</td>
+                <td>{{ team.losses }}</td>
+                <td>{{ team.goals_scored }}</td>
+                <td>{{ team.goals_conceded }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
