@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: lavi324/practice_repo:soccertable
+        image: lavi324/practice:soccer-latest
         ports:
         - containerPort: 9119
