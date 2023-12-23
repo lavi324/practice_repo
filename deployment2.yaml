@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkins-deployment
+  name: jenkins
 spec:
   replicas: 1
   selector:
@@ -13,7 +13,8 @@ spec:
         app: jenkins
     spec:
       containers:
-      - name: jenkins-container
-        image: lavi324/jenrepo:latest
+      - name: jenkins
+        image: jenkins/jenkins:lts
         ports:
         - containerPort: 8080
+        - containerPort: 50000
