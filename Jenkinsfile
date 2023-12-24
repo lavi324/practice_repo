@@ -1,48 +1,40 @@
 pipeline {
     agent any
-
     environment {
-        GKE_CLUSTER_NAME = 'lavi-cluster-1'
-        GKE_ZONE = 'us-central1'
-        KUBE_CONFIG_CREDENTIALS_ID = 'GKE' // Update this line
-        DOCKER_HUB_REPO = 'lavi324/practice'
-        DOCKER_HUB_IMAGE = 'soccer'
-        DOCKER_HUB_TAG = 'latest'
-        DOCKERFILE_URL = 'https://raw.githubusercontent.com/lavi324/practice_repo/main/Dockerfile'
+        PROJECT_ID = "My First Project"
+        CLUSTER_NAME = "lavi-cluster-1"
+        LOCATION = "us-central1"
+        CREDENTIALS_ID = 'GKE' 
     }
-
     stages {
-        stage('Checkout') {
+        stage('Scm Checkout') {
             steps {
-                checkout scm
+                git "https://github.com/lavi324/practice_repo/soccertable.py.git"
             }
         }
-
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    // Build and push Docker image
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        def customImage = docker.build("${DOCKER_HUB_REPO}/${DOCKER_HUB_IMAGE}:${DOCKER_HUB_TAG}", "-f ${DOCKERFILE_URL} .")
-                        customImage.push()
-                    }
+                sh "docker build -t practice_repo/soccertable.py:${env.BUILD_ID} ."
+            }
+        }
+        stage ('push Docker Image') {
+            steps {
+                withCredentials ([string(credentialsId: 'dockerhub', variable: 'dockerHubCredentials')]) {
+                    sh "docker login -u lavi324 -p ${dockerHubCredentials}"
                 }
+                sh "docker push practice_repo/soccertable.py:${env.BUILD_ID} ."
             }
         }
-
-        stage('Update GKE Deployment') {
-            steps {
-                script {
-                    // Configure kubectl with the provided kubeconfig
-                    withCredentials([string(credentialsId: "${KUBE_CONFIG_CREDENTIALS_ID}", variable: 'KUBE_CONFIG_FILE')]) {
-                        sh "kubectl config set-context --current --kubeconfig=${KUBE_CONFIG_FILE}"
-                        
-                        // Update the GKE deployment with the new Docker image
-                        sh "kubectl set image deployment/flask-app flask-app=${DOCKER_HUB_REPO}/${DOCKER_HUB_IMAGE}:${DOCKER_HUB_TAG} --kubeconfig=${KUBE_CONFIG_FILE}"
-                    }
-                }
-            }
-        }
-    }
-}
+        stage('Deploy to GKE') {
+            steps{
+                sh "sed -i 's/tagversion/$(env.BUILD_ID}/g' deployment.yaml"
+                step([$class: 'KubernetesEngineBuilder',
+                    projectId: env.PROJECT_ID, clusterName: env. CLUSTER_NAME,
+                    location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env. CREDENTIALS_ID,
+		    verifyDeployments: true
+                ]}
+            }   
+        }   
+    }   
+}   
 
