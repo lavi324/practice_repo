@@ -8,6 +8,7 @@ pipeline {
         DOCKER_HUB_REPO = 'lavi324/practice'
         DOCKER_HUB_IMAGE = 'soccer'
         DOCKER_HUB_TAG = 'latest'
+        DOCKERFILE_URL = 'https://raw.githubusercontent.com/lavi324/practice_repo/main/Dockerfile'
     }
 
     stages {
@@ -22,7 +23,7 @@ pipeline {
                 script {
                     // Build and push Docker image
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        def customImage = docker.build("${DOCKER_HUB_REPO}/${DOCKER_HUB_IMAGE}:${DOCKER_HUB_TAG}")
+                        def customImage = docker.build("${DOCKER_HUB_REPO}/${DOCKER_HUB_IMAGE}:${DOCKER_HUB_TAG}", "-f ${DOCKERFILE_URL} .")
                         customImage.push()
                     }
                 }
@@ -44,3 +45,4 @@ pipeline {
         }
     }
 }
+
