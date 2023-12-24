@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Scm Checkout') {
             steps {
-                git "https://github.com/lavi324/practice_repo/soccertable.py.git"
+                git "https://github.com/lavi324/practice_repo.git"
             }
         }
         stage('Build Docker Image') {
