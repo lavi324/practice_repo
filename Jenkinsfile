@@ -1,40 +1,68 @@
 pipeline {
-    agent any
-    environment {
-        PROJECT_ID = "My First Project"
-        CLUSTER_NAME = "lavi-cluster-1"
-        LOCATION = "us-central1"
-        CREDENTIALS_ID = 'GKE' 
+    agent {
+        kubernetes {
+            label ''
+            yamlFile 'deployment.yaml'
+            defaultContainer 'flask-app'
+        }
     }
+
+    environment {
+        DOCKER_REGISTRY = 'https://registry.hub.docker.com'
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub') 
+    }
+
     stages {
-        stage('Scm Checkout') {
+        stage('Test Docker') {
             steps {
-                git "https://github.com/lavi324/practice_repo.git"
+                script {
+                    sh 'docker --version'
+                }
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t practice_repo/soccertable.py:${env.BUILD_ID} ."
-            }
-        }
-        stage ('push Docker Image') {
-            steps {
-                withCredentials ([string(credentialsId: 'dockerhub', variable: 'dockerHubCredentials')]) {
-                    sh "docker login -u lavi324 -p ${dockerHubCredentials}"
+                script {
+                    try {
+                        echo 'Starting Docker build...'
+                        
+                        // Clone the Git repository into the workspace
+                        checkout([$class: 'GitSCM', 
+                            branches: [[name: 'main']], // Specify the branch name
+                            userRemoteConfigs: [[url: 'https://github.com/lavi324/practice_repo']]]) 
+                        
+                        // Build the Docker image from the current directory
+                        def dockerImage = docker.build("lavi324/practice", "-f Dockerfile .")
+                        echo 'Docker build completed.'
+                    } catch (Exception e) {
+                        // Print detailed error information
+                        echo "Error: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                        error("Docker build failed")
+                    }
                 }
-                sh "docker push practice_repo/soccertable.py:${env.BUILD_ID} ."
             }
         }
-        stage('Deploy to GKE') {
-            steps{
-                sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deployment.yaml"
-                step([$class: 'KubernetesEngineBuilder',
-                    projectId: env.PROJECT_ID, clusterName: env. CLUSTER_NAME,
-                    location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env. CREDENTIALS_ID,
-		    verifyDeployments: true
-                ])
-            }   
-        }   
-    }   
-}   
+
+        stage('Push Docker Image') {
+            steps {
+             
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push lavi324/practice:latest
+                        '''
+                    }
+                
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Docker image pushed successfully.'
+        }
+    }
+}
 
