@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            label ''
+            label 'flask-app'
             yamlFile 'deployment.yaml'
             defaultContainer 'flask-app'
         }
