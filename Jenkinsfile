@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            label 'docker-image-build'
+            inheritFrom 'docker-image-build'
 	    idleMinutes 5
             yamlFile 'Build-pod.yaml'
             defaultContainer 'dind'
