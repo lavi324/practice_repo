@@ -1,9 +1,9 @@
 pipeline {
     agent {
         kubernetes {
-            label 'flask-app'
-            yamlFile 'deployment.yaml'
-            defaultContainer 'flask-app'
+            label 'docker-image-build'
+            yamlFile 'Build-pod.yaml'
+            defaultContainer 'dind'
         }
     }
 
