@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-image-build
+  namespace: jenkins
+spec:
+  containers:  # list of containers that you want present for your build, you can define a default container in the Jenkinsfile
+  - name: dind
+    image: docker:git
+    imagePullPolicy: Always
+    securityContext:
+      privileged: true
