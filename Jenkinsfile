@@ -10,7 +10,7 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = 'https://registry.hub.docker.com'
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub') 
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhublavi') 
     }
 
     stages {
@@ -49,7 +49,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
              
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhublavi', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push lavi324/practice:latest
