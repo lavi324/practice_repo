@@ -24,25 +24,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    try {
-                        echo 'Starting Docker build...'
-                        
-                        // Clone the Git repository into the workspace
-                        checkout([$class: 'GitSCM', 
-                            branches: [[name: 'main']], // Specify the branch name
-                            userRemoteConfigs: [[url: 'https://github.com/lavi324/practice_repo']]]) 
-                        
-                        // Build the Docker image from the current directory
-                        def dockerImage = docker.build("lavi324/practice", "-f Dockerfile .")
-                        echo 'Docker build completed.'
-                    } catch (Exception e) {
-                        // Print detailed error information
-                        echo "Error: ${e.message}"
-                        currentBuild.result = 'FAILURE'
-                        error("Docker build failed")
-                    }
-                }
+		echo 'start build docker image'
+            	sh "docker build -t latest ."   
             }
         }
 
