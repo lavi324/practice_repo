@@ -13,6 +13,7 @@ teams_data = [
     {"name": "Hapoel tel aviv", "place": 7, "points": 41, "wins": 11, "draws": 8, "losses": 9, "goals_scored": 42, "goals_conceded": 46},
     {"name": "Dortmund", "place": 8, "points": 38, "wins": 10, "draws": 8, "losses": 10, "goals_scored": 41, "goals_conceded": 50},
     {"name": "Sakhnin", "place": 9, "points": 35, "wins": 9, "draws": 8, "losses": 11, "goals_scored": 40, "goals_conceded": 61},
+    {"name": "Milan", "place": 10, "points": 32, "wins": 9, "draws": 5, "losses": 14, "goals_scored": 42, "goals_conceded": 69},
 ]
 
 @app.route('/')
