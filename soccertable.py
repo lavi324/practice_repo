@@ -15,6 +15,7 @@ teams_data = [
     {"name": "Sakhnin", "place": 9, "points": 35, "wins": 9, "draws": 8, "losses": 11, "goals_scored": 40, "goals_conceded": 61},
     {"name": "Milan", "place": 10, "points": 32, "wins": 9, "draws": 5, "losses": 14, "goals_scored": 42, "goals_conceded": 69},
     {"name": "Ashdod", "place": 11, "points": 28, "wins": 8, "draws": 4, "losses": 16, "goals_scored": 33, "goals_conceded": 65},
+    {"name": "Inter", "place": 12, "points": 27, "wins": 8, "draws": 3, "losses": 17, "goals_scored": 30, "goals_conceded": 68},
 ]
 
 @app.route('/')

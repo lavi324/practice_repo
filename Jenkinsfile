@@ -11,7 +11,7 @@ pipeline {
     environment {
         DOCKER_REGISTRY = 'https://registry.hub.docker.com'
         DOCKER_HUB_CREDENTIALS = credentials('dockerhublavi') 
-	TAG = '0.4'
+	TAG = '0.5'
     }
 
     stages {
@@ -37,7 +37,6 @@ pipeline {
                         sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push lavi324/practice:${TAG}
-                        '''
                     }
                 
             }
