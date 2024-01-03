@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        stage('Build Helm Chart')
+        stage('Build Helm Chart') {
             steps {
                 echo 'start build helm chart'
                 sh "helm package my-flask-chart"
