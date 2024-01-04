@@ -59,14 +59,13 @@ pipeline {
                         helm push my-flask-chart-0.1.5.tgz oci://registry-1.docker.io/lavi324
                         '''
                     }
-                
+                }
             }
         }
-    }
 
-    post {
-        success {
-            echo 'Docker image and the helm chart pushed successfully.'
+        post {
+           success {
+              echo 'Docker image and the helm chart pushed successfully.'
         }
     }
 }
