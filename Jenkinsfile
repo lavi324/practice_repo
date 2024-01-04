@@ -2,7 +2,7 @@ pipeline {
     agent {
         kubernetes {
             inheritFrom 'docker-image-build'
-	    idleMinutes 5
+            idleMinutes 5
             yamlFile 'Build-pod.yaml'
             defaultContainer 'dind'
         }
@@ -10,8 +10,8 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = 'https://registry.hub.docker.com'
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhublavi') 
-	TAG = '0.6'
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhublavi')
+        TAG = '0.6'
     }
 
     stages {
@@ -25,20 +25,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-		echo 'start build docker image'
-            	sh "docker build -t lavi324/practice:${TAG} ."   
+                echo 'start build docker image'
+                sh "docker build -t lavi324/practice:${TAG} ."
             }
         }
 
         stage('Push Docker Image') {
             steps {
-             
-                    withCredentials([usernamePassword(credentialsId: 'dockerhublavi', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push lavi324/practice:${TAG}
-                        '''
-                    }
+                withCredentials([usernamePassword(credentialsId: 'dockerhublavi', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker push lavi324/practice:${TAG}
+                    '''
                 }
             }
         }
@@ -52,13 +50,11 @@ pipeline {
 
         stage('Push Helm Chart') {
             steps {
-             
-                    withCredentials([usernamePassword(credentialsId: 'dockerhublavi', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        helm push my-flask-chart-0.1.5.tgz oci://registry-1.docker.io/lavi324
-                        '''
-                    }
+                withCredentials([usernamePassword(credentialsId: 'dockerhublavi', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    helm push my-flask-chart-0.1.5.tgz oci://registry-1.docker.io/lavi324
+                    '''
                 }
             }
         }
