@@ -62,10 +62,5 @@ pipeline {
                 }
             }
         }
-
-        post {
-           success {
-              echo 'Docker image and the helm chart pushed successfully.'
-        }
     }
 }
