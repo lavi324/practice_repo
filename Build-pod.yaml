@@ -12,7 +12,7 @@ spec:
       privileged: true
   containers:
   - name: dind
-    image: docker:dind
+    image: docker:25.0.0-dind
     imagePullPolicy: Always
     securityContext:
       privileged: true
