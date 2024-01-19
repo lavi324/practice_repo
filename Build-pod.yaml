@@ -4,13 +4,7 @@ metadata:
   name: docker-image-build
   namespace: jenkins
 spec:
-  initContainers:
-  - name: install-docker
-    image: docker:dind
-    command: ["sh", "-c", "apk add --no-cache docker"]
-    securityContext:
-      privileged: true
-  containers:
+  containers:  
   - name: dind
     image: docker:dind
     imagePullPolicy: Always
