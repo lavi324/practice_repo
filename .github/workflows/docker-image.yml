@@ -18,13 +18,17 @@ jobs:
           echo "::set-output name=version::$latest_version"
       - name: Calculate new version
         id: calculate_version
+        if: steps.extract_version.outputs.version != ''
         run: |
           latest_version=$(echo "${{ steps.extract_version.outputs.version }}")
           new_version=$(awk -F '.' '{printf "%.1f", $1 + 0.1}' <<< "$latest_version")
           echo "::set-output name=new_version::$new_version"
       - name: Build the Docker image
+        if: steps.extract_version.outputs.version != '' && steps.calculate_version.outputs.new_version != ''
         run: docker build . --file Dockerfile --tag lavi324/git_hub_actions:${{ steps.calculate_version.outputs.new_version }}
       - name: Log in to Docker Hub
+        if: steps.extract_version.outputs.version != '' && steps.calculate_version.outputs.new_version != ''
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Push the Docker image to Docker Hub
+        if: steps.extract_version.outputs.version != '' && steps.calculate_version.outputs.new_version != ''
         run: docker push lavi324/git_hub_actions:${{ steps.calculate_version.outputs.new_version }}
