@@ -7,21 +7,20 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag lavi324/git_hub_actions:$(date +%s)
-        docker tag lavi324/git_hub_actions:$(date +%s) lavi324/git_hub_actions:latest
-    - name: Log into Docker Hub
-      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-      env:
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Push image to Docker Hub
-      run: docker push lavi324/git_hub_actions:0.1
+      - uses: actions/checkout@v3
+      - name: Extract current version from Docker image tags
+        id: extract_version
+        run: echo "::set-output name=version::$(docker image inspect --format '{{ index .RepoDigests 0 }}' my-image-name | awk -F ':' '{print $2}')"
+      - name: Calculate new version
+        id: calculate_version
+        run: echo "::set-output name=new_version::$(echo "${{ steps.extract_version.outputs.version }}" | awk -F '.' '{printf "%.1f", $1 + 0.1}')"
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag lavi324/git_hub_actions:${{ steps.calculate_version.outputs.new_version }}
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Push the Docker image to Docker Hub
+        run: docker push lavi324/git_hub_actions:${{ steps.calculate_version.outputs.new_version }}
+
