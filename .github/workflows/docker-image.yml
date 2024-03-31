@@ -14,7 +14,7 @@ jobs:
       - name: Extract current version from Docker image tags
         id: extract_version
         run: |
-          latest_version=$(docker image inspect --format '{{ index .RepoDigests 0 }}' my-image-name | awk -F ':' '{print $2}')
+          latest_version=$(docker image inspect --format '{{ index .RepoDigests 0 }}' lavi324/git_hub_actions | awk -F ':' '{print $2}')
           echo "::set-output name=version::$latest_version"
       - name: Calculate new version
         id: calculate_version
