@@ -23,4 +23,3 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Push the Docker image to Docker Hub
         run: docker push lavi324/git_hub_actions:${{ steps.calculate_version.outputs.new_version }}
-
