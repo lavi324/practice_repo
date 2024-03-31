@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set tag variable
-        run: echo "::set-env name=tag::0.2"
+        run: echo "TAG=0.2" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Build Docker Image
-        run: docker build . --file Dockerfile --tag lavi324/git_hub_actions:${{ env.tag }}
+        run: docker build . --file Dockerfile --tag lavi324/git_hub_actions:${{ env.TAG }}
 
       - name: Push Docker Image
-        run: docker push lavi324/git_hub_actions:${{ env.tag }}
+        run: docker push lavi324/git_hub_actions:${{ env.TAG }}
