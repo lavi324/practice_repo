@@ -16,7 +16,7 @@ teams_data = [
     {"name": "Milan", "place": 10, "points": 32, "wins": 9, "draws": 5, "losses": 14, "goals_scored": 42, "goals_conceded": 69},
     {"name": "Ashdod", "place": 11, "points": 28, "wins": 8, "draws": 4, "losses": 16, "goals_scored": 33, "goals_conceded": 65},
     {"name": "Inter", "place": 12, "points": 27, "wins": 8, "draws": 3, "losses": 17, "goals_scored": 30, "goals_conceded": 68},
-    {"name": "tzlafon", "place": 13, "points": 26, "wins": 8, "draws": 2, "losses": 18, "goals_scored": 30, "goals_conceded": 75},
+    {"name": "taoz", "place": 13, "points": 26, "wins": 8, "draws": 2, "losses": 18, "goals_scored": 30, "goals_conceded": 75},
     {"name": "tarom", "place": 14, "points": 23, "wins": 7, "draws": 2, "losses": 19, "goals_scored": 32, "goals_conceded": 81},
 ]
 
